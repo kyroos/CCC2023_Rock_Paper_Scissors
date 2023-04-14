@@ -4,6 +4,7 @@
 
 import sys
 import random
+from functools import cache
 
 rules = {
     "PP": "P",
@@ -34,23 +35,21 @@ def fight(pair):
     return rules["".join(pair)]
 
 
-memo = dict()
+@cache
+def multi_winner(left, right):
+    seen = {fight(l[0] + r[0]) for l in left for r in right}
+    return ''.join(seen)
 
 
+@cache
 def winner(tour):
-    if tour in memo:
-        return memo[tour]
-
     if len(tour) == 2:
         return fight(tour)
 
     left = winner(tour[0:len(tour) // 2])
     right = winner(tour[len(tour) // 2:])
 
-    seen = {fight(l[0] + r[0]) for l in left for r in right}
-    ans = ''.join(seen)
-    memo[tour] = ans
-    return ans
+    return multi_winner(left, right)
 
 
 def random_fill(tournament, choices):
@@ -69,6 +68,7 @@ def main(file_name):
     with open(f"{file_name}") as f:
         lines = f.read().strip().split('\n')
 
+    random.seed(2023)
     N, M = map(int, lines.pop(0).split())
     for line in lines:
         ans = solve(line)
