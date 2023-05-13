@@ -77,4 +77,3 @@ if __name__ == "__main__":
         main(file_name)
     else:
         print("Usage: python level7.py <file_name>")
-        main("level7\\level7_1.in")
