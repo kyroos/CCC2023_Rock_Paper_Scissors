@@ -30,21 +30,16 @@ rules = {
     "ZY": "YPL", "YZ": "YPL"
 }
 
-
-def fight(pair):
-    return rules["".join(pair)]
-
-
 @cache
 def multi_winner(left, right):
-    seen = {fight(l[0] + r[0]) for l in left for r in right}
+    seen = {rules[l + r] for l in left for r in right}
     return ''.join(seen)
 
 
 @cache
 def winner(tour):
     if len(tour) == 2:
-        return fight(tour)
+        return rules[tour]
 
     left = winner(tour[0:len(tour) // 2])
     right = winner(tour[len(tour) // 2:])
@@ -82,3 +77,4 @@ if __name__ == "__main__":
         main(file_name)
     else:
         print("Usage: python level7.py <file_name>")
+        main("level7\\level7_1.in")
